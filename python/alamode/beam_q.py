@@ -1,5 +1,6 @@
 import numpy as np
 
+
 class BeamQ:
     """Represents the complex q-parameter of a Gaussian beam, ported from MATLAB."""
 
@@ -53,7 +54,9 @@ class BeamQ:
     def beam_width(self):
         # w(z) = w0 * sqrt(1 + ((z - waist_z)/zR)^2)
         z = np.real(self.q)
-        return self.waist_size * np.sqrt(1 + ((z - self.waist_z) / self.rayleigh_range)**2)
+        return self.waist_size * np.sqrt(
+            1 + ((z - self.waist_z) / self.rayleigh_range) ** 2
+        )
 
     @property
     def radius_of_curvature(self):
@@ -61,7 +64,7 @@ class BeamQ:
         zR = self.rayleigh_range
         if np.isclose(z, self.waist_z):
             return np.inf
-        return z * (1 + (zR / (z - self.waist_z))**2)
+        return z * (1 + (zR / (z - self.waist_z)) ** 2)
 
     @staticmethod
     def transform_value(q_in, M):
@@ -85,4 +88,4 @@ class BeamQ:
         w1 = self.waist_size
         w2 = other.waist_size
         diff = other.q.conjugate() - self.q
-        return ((2 * np.sqrt(w1 * w2) / (w1 + w2))**2)
+        return (2 * np.sqrt(w1 * w2) / (w1 + w2)) ** 2

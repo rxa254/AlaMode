@@ -1,9 +1,10 @@
 import numpy as np
 
+
 class Component:
     """Optical element with ABCD matrix and position z."""
 
-    def __init__(self, M, z, label=''):
+    def __init__(self, M, z, label=""):
         self.M = M
         self.z = z
         self.label = label
