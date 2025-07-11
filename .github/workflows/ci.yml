@@ -1,0 +1,49 @@
+name: CI
+
+on:
+  push:
+    branches: [ master, main ]
+  pull_request:
+    branches: [ master, main ]
+
+jobs:
+  lint:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - name: Lint with flake8
+        run: |
+          pip install flake8
+          flake8 python/alamode
+
+  test:
+    runs-on: ubuntu-latest
+    needs: lint
+    steps:
+      - uses: actions/checkout@v3
+      - name: Setup Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.12'
+      - name: Install dependencies
+        run: |
+          pip install -r python/requirements.txt
+          pip install -e python
+      - name: Run tests
+        run: |
+          pytest -q
+
+  package:
+    runs-on: ubuntu-latest
+    needs: test
+    steps:
+      - uses: actions/checkout@v3
+      - name: Package code
+        run: |
+          cd python
+          ./package.sh
+      - name: Upload artifact
+        uses: actions/upload-artifact@v3
+        with:
+          name: alamode_python.zip
+          path: python/alamode_python.zip
